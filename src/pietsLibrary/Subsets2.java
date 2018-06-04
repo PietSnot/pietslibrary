@@ -7,6 +7,7 @@
 package pietsLibrary;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,25 +23,30 @@ import java.util.stream.IntStream;
 
 public class Subsets2 {
     
+    public static void main(String... args) {
+        List<Integer> list = Arrays.asList(5, 15, 21, 8, 7);
+        Map<Integer, List<List<Integer>>> piet = getSubsets(list);
+        piet.entrySet().forEach(System.out::println);
+    }
+    
     public static <T> Map<Integer, List<List<T>>> getSubsets(List<T> list) {
         Map<Integer, List<List<Integer>>> map = new HashMap<>();
-        getSubsets(map, list.size() - 1, list.size());
+        getSubsets(map, list.size(), list.size());
         return mapIndices(list, map);
     }
     
     private static void getSubsets(Map<Integer, List<List<Integer>>> map, int level, int size) {
-        if (level == 0) {
-            map.computeIfAbsent(0, ArrayList::new).add(new ArrayList<>());
-            return;
+        if (level == 0) map.computeIfAbsent(0, ArrayList::new).add(new ArrayList<>());
+        else {
+            getSubsets(map, level - 1, size);
+            List<List<Integer>> newList = new ArrayList<>();
+            map.put(level, newList);
+            map.get(level - 1).stream().forEach(list -> newList.addAll(getNewSubsets(list, size)));   
         }
-        getSubsets(map, level - 1, size);
-        List<List<Integer>> newList = new ArrayList<>();
-        map.put(level, newList);
-        map.get(level - 1).stream().forEach(list -> newList.addAll(getNewSubsets(list, size)));   
     }
     
     private static List<List<Integer>> getNewSubsets(List<Integer> list, int size) {
-        return IntStream.range(Collections.max(list) + 1, size)
+        return IntStream.range(list.isEmpty() ? 0 : Collections.max(list) + 1, size)
             .mapToObj(i -> {List<Integer> temp = new ArrayList<>(list); temp.add(i); return temp;})
             .collect(toList())
         ;
@@ -52,8 +58,7 @@ public class Subsets2 {
     }
     
     private static <T> List<List<T>> mapIndicesToReal(List<T> list, List<List<Integer>> indices) {
-        List<List<T>> result = indices.stream().map(index -> mapIndexToReal(list, index)).collect(toList());
-        return result;
+        return indices.stream().map(index -> mapIndexToReal(list, index)).collect(toList());
     }
     
     private static <T> Map<Integer, List<List<T>>> mapIndices(List<T> list, Map<Integer, List<List<Integer>>> map) {

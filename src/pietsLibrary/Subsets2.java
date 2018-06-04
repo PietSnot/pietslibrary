@@ -32,7 +32,7 @@ public class Subsets2 {
     public static <T> List<List<T>> getSubsets(List<T> list) {
         Map<Integer, List<List<Integer>>> map = new HashMap<>();
         getSubsets(map, list.size(), list.size());
-        return mapIndices(list, map);
+        return mapIndicesToT(list, map);
     }
     
     private static void getSubsets(Map<Integer, List<List<Integer>>> map, int level, int size) {
@@ -57,12 +57,10 @@ public class Subsets2 {
         return result;
     }
     
-    private static <T> List<List<T>> mapIndicesToReal(List<T> list, List<List<Integer>> indices) {
-        return indices.stream().map(index -> mapIndexToReal(list, index)).collect(toList());
-    }
-    
-    private static <T> List<List<T>> mapIndices(List<T> list, Map<Integer, List<List<Integer>>> map) {
-        List<List<Integer>> p = map.values().stream().flatMap(l -> l.stream()).collect(toList());
-        return mapIndicesToReal(list, p);
+    private static <T> List<List<T>> mapIndicesToT(List<T> list, Map<Integer, List<List<Integer>>> map) {
+        return map.values().stream()
+            .flatMap(ll -> ll.stream().map(l -> mapIndexToReal(list, l)))
+            .collect(toList())
+        ;        
     }
 }

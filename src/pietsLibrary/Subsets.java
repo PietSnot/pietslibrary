@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
@@ -27,6 +28,7 @@ public class Subsets {
         List<Integer> list = Arrays.asList(5, 15, 21, 8, 7);
         List<List<Integer>> piet = getSubsets(list);
         piet.stream().forEach(System.out::println);
+//        Map<Integer, List<List<Integer>>> map = piet.stream().collect(groupingBy(List::size));
     }
     
     public static <T> List<List<T>> getSubsets(List<T> list) {

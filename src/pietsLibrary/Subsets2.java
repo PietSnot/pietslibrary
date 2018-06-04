@@ -25,11 +25,11 @@ public class Subsets2 {
     
     public static void main(String... args) {
         List<Integer> list = Arrays.asList(5, 15, 21, 8, 7);
-        Map<Integer, List<List<Integer>>> piet = getSubsets(list);
-        piet.entrySet().forEach(System.out::println);
+        List<List<Integer>> piet = getSubsets(list);
+        piet.stream().forEach(System.out::println);
     }
     
-    public static <T> Map<Integer, List<List<T>>> getSubsets(List<T> list) {
+    public static <T> List<List<T>> getSubsets(List<T> list) {
         Map<Integer, List<List<Integer>>> map = new HashMap<>();
         getSubsets(map, list.size(), list.size());
         return mapIndices(list, map);
@@ -61,10 +61,8 @@ public class Subsets2 {
         return indices.stream().map(index -> mapIndexToReal(list, index)).collect(toList());
     }
     
-    private static <T> Map<Integer, List<List<T>>> mapIndices(List<T> list, Map<Integer, List<List<Integer>>> map) {
+    private static <T> List<List<T>> mapIndices(List<T> list, Map<Integer, List<List<Integer>>> map) {
         List<List<Integer>> p = map.values().stream().flatMap(l -> l.stream()).collect(toList());
-        List<List<T>> q = mapIndicesToReal(list, p);
-        Map<Integer, List<List<T>>> result = q.stream().collect(groupingBy(l -> l.size()));
-        return result;
+        return mapIndicesToReal(list, p);
     }
 }

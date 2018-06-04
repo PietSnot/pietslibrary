@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
  * @author Piet
  */
 
-public class Subsets2 {
+public class Subsets {
     
     public static void main(String... args) {
         List<Integer> list = Arrays.asList(5, 15, 21, 8, 7);

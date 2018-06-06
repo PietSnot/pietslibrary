@@ -27,6 +27,7 @@ public class Permutaties {
     
     public static void main(String... args) {
         List<String> list = Arrays.asList("aap", "noot", "mies");
+        int a = 5;
         List<List<String>> perms = getPermutations(list);
         perms.forEach(System.out::println);
     }

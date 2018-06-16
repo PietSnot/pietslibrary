@@ -6,11 +6,14 @@
 package pietsLibrary;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
@@ -67,6 +70,15 @@ public class Frequencies {
         for (int i = 1; i <= 20; i++) {
             System.out.println(shuffle2(list));
         }
+        
+        //******************************************8
+        Map<String, Set<Integer>> map = new HashMap<>();
+
+        Comparator<Object> comp = Comparator.comparingInt(Object::hashCode);
+
+        Map<Number, List<CharSequence>> result = sortMapPiet4(map, comp);
+//        SortedMap<Number, ArrayList<CharSequence>> result = new HashMap<>(map);
+//        sortMapPiet3(map, comp);
     }
     
     public static <T> Map<T, Integer> frequencies(List<T> list) {
@@ -117,44 +129,32 @@ public class Frequencies {
     
     public static <K, V extends Comparable<V>> SortedMap<V, List<K>> sortMap(Map<K, V> map) {
         TreeMap<V, List<K>> answer = new TreeMap<>();
-        for (Map.Entry<K, V> e: map.entrySet()) {
-            List<K> list = answer.computeIfAbsent(e.getValue(), t -> new ArrayList<>());
-            list.add(e.getKey());
-        }
+        map.entrySet().forEach(e -> {
+            answer.computeIfAbsent(e.getValue(), t -> new ArrayList<>()).add(e.getKey());
+        });
         return answer;
     }
     
     public static <K, V> SortedMap<V, List<K>> sortMap(Map<K, V> map, Comparator<V> comp) {
         TreeMap<V, List<K>> answer = new TreeMap<>(comp);
-        for (Map.Entry<K, V> e: map.entrySet()) {
-            answer.computeIfAbsent(e.getValue(), t -> new ArrayList<>()).add(e.getKey());
-        }
+        map.entrySet().forEach(
+            e -> answer.computeIfAbsent(e.getValue(), t -> new ArrayList<>()).add(e.getKey())
+        );
         return answer;
     }
     
     public static <K, V> SortedMap<V, List<K>> robSpoor(Map<K, V> map) {
         SortedMap<V, List<K>> result = map.entrySet().stream()
-            .collect(Collectors.groupingBy(
-                Map.Entry::getValue,
-                TreeMap::new,
-                Collectors.mapping(
-                        Map.Entry::getKey,
-                        Collectors.toList()
-                )
-            )
-        );
+            .collect(groupingBy(Map.Entry::getValue, TreeMap::new,
+                     mapping(Map.Entry::getKey, Collectors.toList())))
+        ;
         return result;
     }
     
-    public static <K, V> SortedMap<V, List<K>> pietsSort(Map<K, V> map, Comparator<K> compK, Comparator<V> compV) {
+    public static <K, V> SortedMap<V, List<K>> pietsSort(Map<K, V> map, Comparator<V> compV) {
         SortedMap<V, List<K>> result = map.entrySet().stream().collect(
-            Collectors.groupingBy(
-                Map.Entry::getValue,
-                () -> new TreeMap<>(compV),
-                Collectors.mapping(
-                        Map.Entry::getKey,
-                        Collectors.toList()
-                )
+            groupingBy(
+                Entry::getValue, () -> new TreeMap<>(compV), mapping(Entry::getKey, toList())
             )
         );
         return result;
@@ -173,5 +173,89 @@ public class Frequencies {
         List<K> result = new ArrayList<>(list);
         Collections.shuffle(list);
         return result;
+    }
+    
+    public static <K, V> SortedMap<V, List<K>> sortMapPiet(Map<K, List<V>> map, Comparator<V> comp) {
+        TreeMap<V, List<K>> result = map.entrySet().stream()
+            .flatMap(e -> e.getValue().stream().map(v -> new Tweetal<>(e.getKey(), v)))
+            .collect(groupingBy(t -> t.v, () -> new TreeMap<>(comp), mapping(t -> t.k, toList())))
+        ;
+        return result;
+    }
+    
+    public static <K, V> SortedMap<V, List<K>> sortMapPiet2(Map<K, List<V>> map, Comparator<V> comp) {
+        TreeMap<V, List<K>> result = new TreeMap<>(comp);
+        for (Map.Entry<K, List<V>> e : map.entrySet()) {
+            for (V v: e.getValue()) {
+                result.computeIfAbsent(v, t -> new ArrayList<>()).add(e.getKey());
+            }
+        }
+        return result;
+    }
+    
+    public static <K, V, T extends K, S extends V, Q extends List<S>> SortedMap<V, List<K>> sortMapPiet3(Map<T, Q> map, Comparator<? super V> comp) {
+        TreeMap<V, List<K>> result = new TreeMap<>(comp);
+        for (Map.Entry<T, Q> e : map.entrySet()) {
+            for (S s: e.getValue()) {
+                result.computeIfAbsent(s, t -> new ArrayList<>()).add(e.getKey());
+            }
+        }
+        return result;
+    }
+    
+    public static <K, V, ExtendsK extends K, ExtendsV extends V, ExtendsCollectionExtendsV extends Collection<ExtendsV>> 
+                SortedMap<V, List<K>> 
+          sortMapPiet4(Map<ExtendsK, ExtendsCollectionExtendsV> map, Comparator<? super V> comp) {
+        TreeMap<V, List<K>> result = new TreeMap<>(comp);
+        for (Map.Entry<ExtendsK, ExtendsCollectionExtendsV> e : map.entrySet()) {
+            for (ExtendsV v: e.getValue()) {
+                result.computeIfAbsent(v, whatever -> new ArrayList<>()).add(e.getKey());
+            }
+        }
+        return result;
+    }
+    
+    private static class Tweetal<K, V> {
+        final K k;
+        final V v;
+
+        Tweetal(K k, V v) {
+            this.k = k;
+            this.v = v;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Tweetal<?, ?> other = (Tweetal<?, ?>) obj;
+            if (!Objects.equals(this.k, other.k)) {
+                return false;
+            }
+            if (!Objects.equals(this.v, other.v)) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 79 * hash + Objects.hashCode(this.k);
+            hash = 79 * hash + Objects.hashCode(this.v);
+            return hash;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("K: %s, V: %s", k, v);
+        }
     }
 }

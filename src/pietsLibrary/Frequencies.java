@@ -185,33 +185,37 @@ public class Frequencies {
     
     public static <K, V> SortedMap<V, List<K>> sortMapPiet2(Map<K, List<V>> map, Comparator<V> comp) {
         TreeMap<V, List<K>> result = new TreeMap<>(comp);
-        for (Map.Entry<K, List<V>> e : map.entrySet()) {
-            for (V v: e.getValue()) {
-                result.computeIfAbsent(v, t -> new ArrayList<>()).add(e.getKey());
-            }
-        }
+        map.entrySet().forEach(e -> 
+            e.getValue().forEach(
+                v -> result.computeIfAbsent(v, whatever -> new ArrayList<>()).add(e.getKey())
+            )
+        );
         return result;
     }
     
-    public static <K, V, T extends K, S extends V, Q extends List<S>> SortedMap<V, List<K>> sortMapPiet3(Map<T, Q> map, Comparator<? super V> comp) {
-        TreeMap<V, List<K>> result = new TreeMap<>(comp);
-        for (Map.Entry<T, Q> e : map.entrySet()) {
-            for (S s: e.getValue()) {
-                result.computeIfAbsent(s, t -> new ArrayList<>()).add(e.getKey());
-            }
-        }
+    public static <K, V, T extends K, S extends V, Q extends Collection<S>> 
+        SortedMap<V, List<K>> 
+        sortMapPiet3(Map<T, Q> map, Comparator<? super V> comp) {
+            TreeMap<V, List<K>> result = new TreeMap<>(comp);
+            map.entrySet().forEach(e -> 
+                e.getValue().forEach(
+                    s -> result.computeIfAbsent(s, whatever -> new ArrayList<>()).add(e.getKey())
+                )
+            )
+        ;
         return result;
     }
-    
-    public static <K, V, ExtendsK extends K, ExtendsV extends V, ExtendsCollectionExtendsV extends Collection<ExtendsV>> 
-                SortedMap<V, List<K>> 
-          sortMapPiet4(Map<ExtendsK, ExtendsCollectionExtendsV> map, Comparator<? super V> comp) {
-        TreeMap<V, List<K>> result = new TreeMap<>(comp);
-        for (Map.Entry<ExtendsK, ExtendsCollectionExtendsV> e : map.entrySet()) {
-            for (ExtendsV v: e.getValue()) {
-                result.computeIfAbsent(v, whatever -> new ArrayList<>()).add(e.getKey());
-            }
-        }
+        
+    public static <K, V> 
+        SortedMap<V, List<K>> 
+        sortMapPiet4(Map<? extends K, ? extends Collection<? extends V>> map, Comparator<? super V> comp) {
+            TreeMap<V, List<K>> result = new TreeMap<>(comp);
+            map.entrySet().forEach(e -> 
+                e.getValue().forEach(
+                    s -> result.computeIfAbsent(s, whatever -> new ArrayList<>()).add(e.getKey())
+                )
+            )
+        ;
         return result;
     }
     

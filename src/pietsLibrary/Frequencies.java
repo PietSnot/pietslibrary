@@ -206,18 +206,18 @@ public class Frequencies {
         return result;
     }
         
-    public static <K, V> 
-        SortedMap<V, List<K>> 
-        sortMapPiet4(Map<? extends K, ? extends Collection<? extends V>> map, Comparator<? super V> comp) {
-            TreeMap<V, List<K>> result = new TreeMap<>(comp);
-            map.entrySet().forEach(e -> 
-                e.getValue().forEach(
-                    s -> result.computeIfAbsent(s, whatever -> new ArrayList<>()).add(e.getKey())
-                )
+public static <K, V> 
+    SortedMap<V, List<K>> 
+    sortMapPiet4(Map<? extends K, ? extends Collection<? extends V>> map, Comparator<? super V> comp) {
+        TreeMap<V, List<K>> result = new TreeMap<>(comp);
+        map.entrySet().forEach(e -> 
+            e.getValue().forEach(
+                s -> result.computeIfAbsent(s, whatever -> new ArrayList<>()).add(e.getKey())
             )
-        ;
-        return result;
-    }
+        )
+    ;
+    return result;
+}
     
     private static class Tweetal<K, V> {
         final K k;

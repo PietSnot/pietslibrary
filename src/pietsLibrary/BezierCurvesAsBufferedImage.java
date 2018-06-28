@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import static java.awt.RenderingHints.KEY_ANTIALIASING;
+import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
@@ -50,7 +52,7 @@ public class BezierCurvesAsBufferedImage {
                 (float) outerRadius, (float) -outerRadius, endcol
         );
         g2d.setPaint(gp);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
         g2d.fill(p2dd);
         g2d.dispose();
         return bufim;
@@ -103,7 +105,7 @@ public class BezierCurvesAsBufferedImage {
                 (float) 1, (float) -1, endcol
         );
         g2d.setPaint(gp);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
         g2d.fill(p2d);
         g2d.dispose();
         return bufim;

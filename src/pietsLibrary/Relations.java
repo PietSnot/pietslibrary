@@ -16,18 +16,18 @@ import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
 
 /**
- * This class has N integers 0, 1, ..., N-1, initially unrelated.
- * With the comand union(n, m) the integers n and m will be related.
+ * This class has N integers 0, 1, ..., N-1, initially unrelated.With the comand union(n, m) the integers n and m will be related.
  * You can ask if two integers are related with: boolean areRelated(n, m)
- * If n and m are related, and m and p are related, then so are n and p.
- * So, this class effectively groups the elements into groups of related
- * integers. You can ask for an overview of these groups with the command
- * getGroups().
- * This structure can be used to partition a Graph into related vertices. The
- * relation is if there is a path between two vertices.
- * The graph must be undirected.
+ If n and m are related, and m and p are related, then so are n and p.
+ So, this class effectively groups the elements into groups of related
+ integers. You can ask for an overview of these groups with the command
+ getGroups().
+ This structure can be used to partition a Graph into related vertices. The
+ relation is if there is a path between two vertices.
+ The graph must be undirected.
  * 
  * @author Piet
+ * @param <T> the generic class type
  */
 
 public class Relations<T> {

@@ -14,19 +14,23 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+import java.util.stream.Stream;
 
 /**
- * This class has N integers 0, 1, ..., N-1, initially unrelated.With the comand union(n, m) the integers n and m will be related.
+ * This class has N elements of type T, initially unrelated. With 
+ * the comand union(n, m) the integers n and m will be related.
  * You can ask if two integers are related with: boolean areRelated(n, m)
- If n and m are related, and m and p are related, then so are n and p.
- So, this class effectively groups the elements into groups of related
- integers. You can ask for an overview of these groups with the command
- getGroups().
- This structure can be used to partition a Graph into related vertices. The
- relation is if there is a path between two vertices.
- The graph must be undirected.
+ * If n and m are related, and m and p are related, then so are n and p.
+ * So, this class effectively groups the elements into groups of related
+ * integers. You can ask for an overview of these groups with the command
+ * getGroups().
+ * This structure can be used to partition a Graph into related vertices. The
+ * relation is if there is a path between two vertices.
+ * The graph must be undirected.
  * 
  * @author Piet
+ * The Hague, Holland, 10th august 2018
  * @param <T> the generic class type
  */
 
@@ -41,8 +45,8 @@ public class Relations<T> {
     //==============================================
     // constructors
     //==============================================
-    public Relations(Iterable<T> iters) {
-        iters.forEach(t -> map.put(t, new Object()));
+    public <S extends Iterable<? extends T>> Relations(S collection) {
+        collection.forEach(c -> map.put(c, new Object()));
         size = map.size();
     }
     
@@ -50,6 +54,19 @@ public class Relations<T> {
     public Relations(T[] array) {
         for (T t: array) map.put(t, new Object());
         size = map.size();
+    }
+    
+    //--------------------------------------
+    public Relations(Map<T, List<T>> adjacencyMap) {
+        adjacencyMap.entrySet().stream()
+            .flatMap(e -> Stream.concat(Stream.of(e.getKey()), e.getValue().stream()))
+            .collect(toSet())
+            .forEach(t -> map.put(t, new Object())
+        );
+        size = map.size();
+        adjacencyMap.forEach(
+            (k, v) -> v.stream().forEach(t -> relate(k, t))
+        );
     }
     
     //==============================================
@@ -63,7 +80,7 @@ public class Relations<T> {
     //--------------------------------------
     public boolean relate(T a, T b) {
         if (!allAreInMap(a, b)) return false;
-        Object o = map.get(a);
+        var o = map.get(a);
         getGroup(b).forEach(s -> map.put(s, o));
         return true;
     }
@@ -99,6 +116,9 @@ public class Relations<T> {
     private boolean allAreInMap(T... a) {
         return map.keySet().containsAll(Arrays.asList(a));
     }
+    
+    //--------------------------------------
+    
     
     //==============================================
     // end of class

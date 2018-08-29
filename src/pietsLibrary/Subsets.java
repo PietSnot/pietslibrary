@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  *
@@ -25,12 +26,12 @@ import java.util.stream.IntStream;
 public class Subsets {
     
     public static void main(String... args) {
-        List<Integer> list = Arrays.asList(5, 15, 21, 8, 7);
-        List<List<Integer>> piet = getSubsets(list);
+        var list = Arrays.asList(5, 15, 21, 8, 7);
+        var piet = getSubsets(list);
         piet.stream().forEach(System.out::println);
-        Map<Integer, List<List<Integer>>> map = piet.stream().collect(groupingBy(List::size));
+        var map = piet.stream().collect(groupingBy(List::size));
         map.entrySet().forEach(System.out::println);
-        Map<Integer, Long> map2 = piet.stream().collect(groupingBy(List::size, counting()));
+        var map2 = piet.stream().collect(groupingBy(List::size, counting()));
         map2.entrySet().forEach(System.out::println);
     }
     
@@ -40,25 +41,25 @@ public class Subsets {
         return mapIndicesToT(list, map);
     }
     
+    private static Stream<List<Integer>> getNewSubsets(List<Integer> list, int size) {
+        return IntStream.range(list.isEmpty() ? 0 : Collections.max(list) + 1, size)
+            .mapToObj(i -> {List<Integer> temp = new ArrayList<>(list); temp.add(i); return temp;})
+        ;
+    }
+    
     private static void getSubsets(Map<Integer, List<List<Integer>>> map, int level, int size) {
         if (level == 0) map.computeIfAbsent(0, ArrayList::new).add(new ArrayList<>());
         else {
             getSubsets(map, level - 1, size);
-            List<List<Integer>> newList = new ArrayList<>();
-            map.put(level, newList);
-            map.get(level - 1).stream().forEach(list -> newList.addAll(getNewSubsets(list, size)));   
+            var temp = map.get(level - 1).stream()
+                .flatMap(list -> getNewSubsets(list, size))
+            ; 
+            map.put(level, temp.collect(toList()));
         }
     }
     
-    private static List<List<Integer>> getNewSubsets(List<Integer> list, int size) {
-        return IntStream.range(list.isEmpty() ? 0 : Collections.max(list) + 1, size)
-            .mapToObj(i -> {List<Integer> temp = new ArrayList<>(list); temp.add(i); return temp;})
-            .collect(toList())
-        ;
-    }
-    
     private static <T> List<T> mapIndexToReal(List<T> list, List<Integer> index) {
-        List<T> result = index.stream().map(list::get).collect(toList());
+        var result = index.stream().map(list::get).collect(toList());
         return result;
     }
     

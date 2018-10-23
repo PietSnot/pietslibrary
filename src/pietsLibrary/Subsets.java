@@ -51,9 +51,7 @@ public class Subsets {
         if (level == 0) map.computeIfAbsent(0, ArrayList::new).add(new ArrayList<>());
         else {
             getSubsets(map, level - 1, size);
-            var temp = map.get(level - 1).stream()
-                .flatMap(list -> getNewSubsets(list, size))
-            ; 
+            var temp = map.get(level - 1).stream().flatMap(list -> getNewSubsets(list, size)); 
             map.put(level, temp.collect(toList()));
         }
     }

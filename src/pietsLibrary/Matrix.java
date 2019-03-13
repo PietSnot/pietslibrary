@@ -33,6 +33,10 @@ public class Matrix {
         m.inverse().print(f);
         System.out.println("***************");
         m.multiply(m.inverse()).print(f);
+        System.out.println("***************");
+        m.inverse().multiply(m).print(f);
+        System.out.println("***************");
+        m.multiply(3).print(f);
     }
     
     

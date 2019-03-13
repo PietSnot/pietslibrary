@@ -12,7 +12,7 @@ package pietsLibrary;
  */
 public class Pair<K, V> {
     final public K k;
-    final V v;
+    final public V v;
     
     public Pair(K k, V v) {
         this.k = k;

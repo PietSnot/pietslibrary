@@ -48,7 +48,7 @@ public class AffineTransformHelper {
            boolean keepAspectratio
          ) {
       if (keepAspectratio) {
-          double alpha = ((originalRight - originalLeft) * (top - bottom) /
+          double alpha = Math.abs((originalRight - originalLeft) * (top - bottom) /
                          (originalTop - originalBottom) - (right - left)) / 2;
           left -= alpha;
           right += alpha;
@@ -91,3 +91,4 @@ public class AffineTransformHelper {
       else return 0;
    }
 }
+

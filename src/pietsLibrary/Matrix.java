@@ -219,7 +219,7 @@ public class Matrix {
     
     //-----------------------------------------------------------
     public Matrix multiply(double d) {
-        double[][] result = Arrays.stream(x)
+        var result = Arrays.stream(x)
             .map(row -> Arrays.stream(row).map(i -> d * i).toArray())
             .toArray(double[][]::new)
         ;
@@ -229,7 +229,7 @@ public class Matrix {
     //-----------------------------------------------------------
     public Matrix coFactor() {
         if (!this.isSquare()) throw new RuntimeException("Matrix is not square!!!");
-        double[][] result = IntStream.range(0, getRowdimension())
+        var result = IntStream.range(0, getRowdimension())
             .mapToObj(i -> IntStream.range(0, getColumndimension())
                 .mapToDouble(j -> this.minor(i, j) * sign(i, j))
                 .toArray()
@@ -242,8 +242,8 @@ public class Matrix {
     //-----------------------------------------------------------
     public Matrix inverse() {
         var det = this.determinant();
-        if (Math.abs(det) < 1) throw new RuntimeException
-            ("determinant is zero or too low ( < 1) to calculate inverse!!!!!");
+        if (Math.abs(det) < .1) throw new RuntimeException
+            ("determinant is zero or too low ( < .1) to calculate inverse!!!!!");
         return this.coFactor().transpose().multiply(1 / det);
     }
     
@@ -313,11 +313,6 @@ public class Matrix {
             .toArray(double[][]::new)
         ;
         return result;
-    }
-    
-    //-----------------------------------------------------------
-    private boolean rowIndexOK(int index) {
-        return index >= 0 && index < this.getRowdimension();
     }
     
     //-----------------------------------------------------------

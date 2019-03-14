@@ -37,6 +37,16 @@ public class Matrix {
         m.inverse().multiply(m).print(f);
         System.out.println("***************");
         m.multiply(3).print(f);
+        m = Matrix.of(4, 4, 1,0,0,0, 0,2,0,0, 0,0,3,0, 0,0,0,4);
+        System.out.println("***************");
+        m.print(f);
+        System.out.println("***************");
+        var s = m.inverse();
+        s.print(f);
+        System.out.println("***************");
+        m.multiply(s).print(f);
+        System.out.println("***************");
+        s.multiply(m).print(f);
     }
     
     

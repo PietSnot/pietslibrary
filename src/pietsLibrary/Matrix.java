@@ -11,7 +11,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.DoubleBinaryOperator;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  *
@@ -22,31 +24,25 @@ public class Matrix {
     private final double[][] x;
     
     public static void main(String... args) {
-        Matrix m = Matrix.of(3, 3, 1, 2, 3, 2, 1, 3, 1, 1, 1);
-        String f = "%8.2f";
-        m.print(f);
-        System.out.println("***************");
-        m.coFactor().print(f);
-        System.out.println("***************");
-        m.coFactor().transpose().multiply(1 / m.determinant()).print(f);
-        System.out.println("***************");
-        m.inverse().print(f);
-        System.out.println("***************");
-        m.multiply(m.inverse()).print(f);
-        System.out.println("***************");
-        m.inverse().multiply(m).print(f);
-        System.out.println("***************");
-        m.multiply(3).print(f);
-        m = Matrix.of(4, 4, 1,0,0,0, 0,2,0,0, 0,0,3,0, 0,0,0,4);
-        System.out.println("***************");
-        m.print(f);
-        System.out.println("***************");
-        var s = m.inverse();
-        s.print(f);
-        System.out.println("***************");
-        m.multiply(s).print(f);
-        System.out.println("***************");
-        s.multiply(m).print(f);
+        Matrix d = Matrix.of(new double[] {1, 2, 3});
+        d.print();
+        d.transpose().print();
+//        List<String> input = List.of(
+//            "2 7", 
+//            "0.18 0.89 109.85",
+//            "1.0 0.26 155.72",
+//            "0.92 0.11 137.66",
+//            "0.07 0.37 76.17",
+//            "0.85 0.16 139.75",
+//            "0.99 0.41 162.6",
+//            "0.87 0.47 151.77",
+//            "4",
+//            "0.49 0.18",
+//            "0.57 0.83",
+//            "0.56 0.64",
+//            "0.76 0.18"
+//        );
+        
     }
     
     
@@ -73,6 +69,26 @@ public class Matrix {
         <S extends Number, U extends Collection<S>, T extends Collection<U>>
         Matrix of(T x) {
         return Matrix.of(convertToDouble(x));
+    }
+        
+    //-----------------------------------------------------------
+    public static Matrix of(double[] x) {
+        return Matrix.of(new double[][]{x});     
+    }
+    
+    //-----------------------------------------------------------
+    public static Matrix of(int[] x) {
+        return Matrix.of(new int[][]{x});
+    }
+    
+    //-----------------------------------------------------------
+    public static Matrix of(long[] x) {
+        return Matrix.of(new long[][] {x});
+    }
+    
+    //-----------------------------------------------------------
+    public static Matrix of(List<? extends Number> list) {
+        return Matrix.of(list.stream().mapToDouble(i -> i.doubleValue()).toArray());
     }
         
     //-----------------------------------------------------------
@@ -242,9 +258,17 @@ public class Matrix {
     //-----------------------------------------------------------
     public Matrix inverse() {
         var det = this.determinant();
-        if (Math.abs(det) < .1) throw new RuntimeException
-            ("determinant is zero or too low ( < .1) to calculate inverse!!!!!");
+        if (Math.abs(det) < .01) throw new RuntimeException
+            ("determinant is zero or too low ( < .01) to calculate inverse!!!!!");
         return this.coFactor().transpose().multiply(1 / det);
+    }
+    
+    //-----------------------------------------------------------
+    public Matrix linearRegression(double[][] X, double[] Y) {
+        Matrix m = Matrix.of(addOneToArray(X));
+        Matrix mT = m.transpose();
+        Matrix result = mT.multiply(m).inverse().multiply(mT).multiply(Matrix.of(Y).transpose());
+        return result;
     }
     
     //-----------------------------------------------------------
@@ -340,7 +364,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private static double lenght(double[] x) {
+    private static double length(double[] x) {
         return Math.sqrt(dotProduct(x, x));
     }
     
@@ -354,6 +378,16 @@ public class Matrix {
     //-----------------------------------------------------------
     private static boolean matricesAreOkeToMultiply(Matrix m, Matrix n) {
         return m.getColumndimension() == n.getRowdimension();
+    }
+    
+    //-----------------------------------------------------------
+    private static double[] addOneToArray(double[] x) {
+        return DoubleStream.concat(DoubleStream.of(1), Arrays.stream(x)).toArray();
+    }
+    
+    //-----------------------------------------------------------
+    private static double[][] addOneToArray(double[][] x) {
+        return Arrays.stream(x).map(Matrix::addOneToArray).toArray(double[][]::new);
     }
     
     //-----------------------------------------------------------

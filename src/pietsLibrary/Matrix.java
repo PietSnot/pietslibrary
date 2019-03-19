@@ -22,48 +22,70 @@ public class Matrix {
     private final double[][] x;
     
     public static void main(String... args) {
-        List<String> input = List.of(
-            "2 7", 
-            "0.18 0.89 109.85",
-            "1.0 0.26 155.72",
-            "0.92 0.11 137.66",
-            "0.07 0.37 76.17",
-            "0.85 0.16 139.75",
-            "0.99 0.41 162.6",
-            "0.87 0.47 151.77",
-            "4",
-            "0.49 0.18",
-            "0.57 0.83",
-            "0.56 0.64",
-            "0.76 0.18"
-        );
-        int[] nrs = Arrays.stream(input.get(0).split(" ")).mapToInt(Integer::parseInt).toArray();
-        int vars = nrs[0], obs = nrs[1];
-        double[][] x = new double[vars][obs];
-        double[] y = new double[obs];
-        for (int line = 1; line <= obs; line++) {
-            double[] data = Arrays.stream(input.get(line).split(" ")).mapToDouble(Double::parseDouble).toArray();
-            for (int k = 0; k < vars; k++) {
-                x[line - 1][k] = data[0];
-                x[line - 1][k + 1] = data[1];
-            }
-            y[line] = data[vars];
-        }
-        int requested = Integer.parseInt(input.get(obs + 1));
-        double[][] reqs = new double[requested][2];
-        for (int line = obs + 2; line < input.size(); line++) {
-            reqs[line - obs - 2] = Arrays.stream(input.get(line).split(" "))
-                .mapToDouble(Double::parseDouble)
-                .toArray()
-            ;
-        }
+//        List<String> input = List.of(
+//            "2 7", 
+//            "0.18 0.89 109.85",
+//            "1.0 0.26 155.72",
+//            "0.92 0.11 137.66",
+//            "0.07 0.37 76.17",
+//            "0.85 0.16 139.75",
+//            "0.99 0.41 162.6",
+//            "0.87 0.47 151.77",
+//            "4",
+//            "0.49 0.18",
+//            "0.57 0.83",
+//            "0.56 0.64",
+//            "0.76 0.18"
+//        );
+//        int[] nrs = Arrays.stream(input.get(0).split(" ")).mapToInt(Integer::parseInt).toArray();
+//        int vars = nrs[0], obs = nrs[1];
+//        double[][] x = new double[obs][vars];
+//        double[] y = new double[obs];
+//        for (int line = 1; line <= obs; line++) {
+//            double[] data = Arrays.stream(input.get(line).split(" ")).mapToDouble(Double::parseDouble).toArray();
+//            for (int k = 0; k < vars; k++) {
+//                x[line - 1][k] = data[k];
+//            }
+//            y[line - 1] = data[vars];
+//        }
+//        int requested = Integer.parseInt(input.get(obs + 1));
+//        double[][] reqs = new double[requested][2];
+//        for (int line = obs + 2; line < input.size(); line++) {
+//            reqs[line - obs - 2] = Arrays.stream(input.get(line).split(" "))
+//                .mapToDouble(Double::parseDouble)
+//                .toArray()
+//            ;
+//        }
         
-        double[][] x1 = addOneToArray(x);
-        Matrix X = Matrix.of(x1);
+        String f = "%10.5f";
+        Matrix x = Matrix.of(new double[][]{{5, 6, 7, 8, 9}, {7, 6, 4, 5, 6}});
+        Matrix X = Matrix.of(addOneToArray(x.transpose().getData()));
+        X.print(f);
+        System.out.println("*********************");
         Matrix XT = X.transpose();
-        Matrix Y = Matrix.of(y).transpose();
+        XT.print(f);
+        System.out.println("*********************");
+        Matrix Y = Matrix.of(5, 1, 10, 20, 60, 40, 50);
+        Y.print(f);
+        System.out.println("*********************");
+        Matrix XTX = XT.multiply(X);
+        XTX.print(f);
+        System.out.println("*********************");
+        Matrix XTXmin1 = XTX.inverse();
+        XTXmin1.print(f);
+        System.out.println("*********************");
         Matrix solution = XT.multiply(X).inverse().multiply(XT).multiply(Y);
-        
+        solution.print(f);
+        System.out.println("*********************");
+//        Matrix t = Matrix.of(new double[][] {{1, 5, 5}}).multiply(solution);
+//        t.print(f);
+        System.out.println("*********************");
+        System.out.println("*********************");
+        Matrix xx = Matrix.of(5, 2, 5, 7, 6, 6, 7, 4, 8, 5, 9, 6);
+        Matrix xxx = Matrix.of(addOneToArray(xx.getData()));
+        Matrix obsY = Matrix.of(5, 1, 10, 20, 60, 40, 50);
+        Matrix hh = xxx.transpose().multiply(xxx).inverse().multiply(xxx.transpose()).multiply(obsY);
+        hh.print(f);
     }
     
     

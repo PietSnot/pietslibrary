@@ -83,9 +83,15 @@ public class Matrix {
         System.out.println("*********************");
         Matrix xx = Matrix.of(5, 2, 5, 7, 6, 6, 7, 4, 8, 5, 9, 6);
         Matrix xxx = Matrix.of(addOneToArray(xx.getData()));
+        Matrix xxxT = xxx.transpose();
         Matrix obsY = Matrix.of(5, 1, 10, 20, 60, 40, 50);
-        Matrix hh = xxx.transpose().multiply(xxx).inverse().multiply(xxx.transpose()).multiply(obsY);
+        Matrix hh = xxxT.multiply(xxx).inverse().multiply(xxxT).multiply(obsY);
         hh.print(f);
+        System.out.println("*********************");
+        System.out.println("*********************");
+        double[][] oX = {{5, 7}, {6, 6}, {7, 4}, {8, 5}, {9, 6}};
+        double[] oY = {10, 20, 60, 40, 50};
+        Matrix flup = linearRegression(oX, oY);
     }
     
     
@@ -307,7 +313,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    public Matrix linearRegression(double[][] X, double[] Y) {
+    public static Matrix linearRegression(double[][] X, double[] Y) {
         Matrix m = Matrix.of(addOneToArray(X));
         Matrix mT = m.transpose();
         Matrix result = mT.multiply(m).inverse().multiply(mT).multiply(Matrix.of(Y).transpose());

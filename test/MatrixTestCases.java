@@ -167,7 +167,6 @@ public class MatrixTestCases {
         Matrix.of(d).add(Matrix.of(e));
     }
     
-    
     //****************************************************************
     // testing addition and subtraction
     //****************************************************************
@@ -217,4 +216,60 @@ public class MatrixTestCases {
         var co = Matrix.of(2, 2, 4, -2, -3, 1);
         assertEquals(m.coFactor(), co);
     }
+    
+    //****************************************************************
+    // testing dotproduct
+    //****************************************************************
+    
+    @Test(expected = RuntimeException.class)
+    public void expectedRuntimeExceptionWhenOneOfTheArraysIsNotAVector() {
+        Matrix m = Matrix.of(3, 2, 1, 2, 3, 4, 5, 6);
+        Matrix n = Matrix.of(3, 2, 1, 2, 3, 4, 5, 6);
+        double d = m.dotProduct(n);
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void expectedRuntimeExceptionWhenOneOfTheArraysIsNotAVector2() {
+        Matrix m = Matrix.of(3, 1, 2, 3);
+        Matrix n = Matrix.of(3, 2, 1, 2, 3, 4, 5, 6);
+        double d = m.dotProduct(n);
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void expectedRuntimeExceptionWhenVectorsHaveDifferentLenghts() {
+        Matrix m = Matrix.of(3, 1, 1, 2, 3);
+        Matrix n = Matrix.of(1, 4, 1, 2, 3, 4);
+        double d = m.dotProduct(n);
+    }
+    
+    @Test
+    public void testRowVectorDotproducRowvector() {
+        Matrix m = Matrix.of(3, 1, 1, 2, 3);
+        Matrix n = Matrix.of(3, 1, 1, 2, 3);
+        assertTrue(m.dotProduct(n) == 14);
+    }
+  
+    @Test
+    public void testRowVectorDotproductColumnvector() {
+        Matrix m = Matrix.of(3, 1, 1, 2, 3);
+        Matrix n = Matrix.of(1, 3, 1, 2, 3);
+        assertTrue(m.dotProduct(n) == 14);
+        assertEquals(m.multiply(n), Matrix.of(3, 3, 1, 2, 3, 2, 4, 6, 3, 6, 9));
+    }
+
+    @Test
+    public void testColumnVectorDotproducRowvector() {
+        Matrix m = Matrix.of(1, 3, 1, 2, 3);
+        Matrix n = Matrix.of(3, 1, 1, 2, 3);
+        assertTrue(m.dotProduct(n) == 14);
+        assertTrue(m.multiply(n).equals(Matrix.of(new int[][] {{14}})));
+    }
+
+    @Test
+    public void testColumnVectorDotproducColumnvector() {
+        Matrix m = Matrix.of(1, 3, 1, 2, 3);
+        Matrix n = Matrix.of(1, 3, 1, 2, 3);
+        assertTrue(m.dotProduct(n) == 14);
+    }
+
 }

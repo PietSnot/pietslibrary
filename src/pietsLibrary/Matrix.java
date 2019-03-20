@@ -194,6 +194,36 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
+    public boolean isRowvector() {
+        return x.length == 1;
+    }
+    
+    //-----------------------------------------------------------
+    public boolean isColumnvector() {
+        return x[0].length == 1;
+    }
+    
+    //-----------------------------------------------------------
+    public boolean isVector() {
+        return isRowvector() || isColumnvector();
+    }
+    
+    //-----------------------------------------------------------
+    public double dotProduct(Matrix m) {
+        if (!(this.isVector() && m.isVector())) throw new RuntimeException
+            ("Matrices must both be a Vector!!!!");
+        if (this.isRowvector()) {
+            if (m.isRowvector()) return Matrix.dotProduct(this.getRow(0), m.getRow(0));
+            else return Matrix.dotProduct(this.getRow(0), m.getColumn(0));
+        }
+        else {
+            // columnvector
+            if (m.isRowvector()) return Matrix.dotProduct(this.getColumn(0), m.getRow(0));
+            else return Matrix.dotProduct(this.getColumn(0), m.getColumn(0));
+        }
+    }
+    
+    //-----------------------------------------------------------
     public double[][] getData() {
         return Arrays.stream(x)
             .map(row -> Arrays.copyOf(row, row.length))
@@ -319,6 +349,8 @@ public class Matrix {
         Matrix result = mT.multiply(m).inverse().multiply(mT).multiply(Matrix.of(Y).transpose());
         return result;
     }
+    
+    //-----------------------------------------------------------
     
     //-----------------------------------------------------------
     public void print(String format) {

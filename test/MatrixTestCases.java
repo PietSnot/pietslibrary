@@ -54,12 +54,12 @@ public class MatrixTestCases {
     @Test(expected = RuntimeException.class)
     public void expectedErrorWhenDoubleIsNotRectangular1() {
         double[][] d = {{1}, {1, 2}};
-        var m = Matrix.of(d);
+        Matrix m = Matrix.of(d);
     }
     
     public void expectedErrorWhenDoubleIsNotRectangular2() {
         double[][] d = {{1, 2, 3}, {1, 2, 3, 4}, {1, 2, 3}};
-        var m = Matrix.of(d);
+        Matrix m = Matrix.of(d);
     }
     
     @Test(expected = RuntimeException.class)

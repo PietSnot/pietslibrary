@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package pietsLibrary;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 import java.util.function.DoubleBinaryOperator;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -19,79 +14,62 @@ import java.util.stream.IntStream;
  */
 public class Matrix {
     
-    private final double[][] x;
+    public final double[][] x;
     
     public static void main(String... args) {
-//        List<String> input = List.of(
-//            "2 7", 
-//            "0.18 0.89 109.85",
-//            "1.0 0.26 155.72",
-//            "0.92 0.11 137.66",
-//            "0.07 0.37 76.17",
-//            "0.85 0.16 139.75",
-//            "0.99 0.41 162.6",
-//            "0.87 0.47 151.77",
-//            "4",
-//            "0.49 0.18",
-//            "0.57 0.83",
-//            "0.56 0.64",
-//            "0.76 0.18"
-//        );
-//        int[] nrs = Arrays.stream(input.get(0).split(" ")).mapToInt(Integer::parseInt).toArray();
-//        int vars = nrs[0], obs = nrs[1];
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class   
+           should be named Solution. 
+        */
+
+//        Scanner scan = new Scanner(System.in);
+//
+//        int[] nrs = Arrays.stream(scan.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+//        int obs = nrs[1];
+//        int vars = nrs[0];
+//
 //        double[][] x = new double[obs][vars];
 //        double[] y = new double[obs];
-//        for (int line = 1; line <= obs; line++) {
-//            double[] data = Arrays.stream(input.get(line).split(" ")).mapToDouble(Double::parseDouble).toArray();
+//        for (int line = 0; line < obs; line++) {
+//            double[] data = Arrays.stream(scan.nextLine().split(" ")).mapToDouble(Double::parseDouble).toArray();
 //            for (int k = 0; k < vars; k++) {
-//                x[line - 1][k] = data[k];
+//                x[line][k] = data[k];
 //            }
-//            y[line - 1] = data[vars];
+//            y[line] = data[vars];
 //        }
-//        int requested = Integer.parseInt(input.get(obs + 1));
+//
+//        int requested = Integer.parseInt(scan.nextLine());
 //        double[][] reqs = new double[requested][2];
-//        for (int line = obs + 2; line < input.size(); line++) {
-//            reqs[line - obs - 2] = Arrays.stream(input.get(line).split(" "))
+//        for (int line = 0; line < requested; line++) {
+//            reqs[line] = Arrays.stream(scan.nextLine().split(" "))
 //                .mapToDouble(Double::parseDouble)
 //                .toArray()
 //            ;
 //        }
+//
+//        Matrix M = linearRegression(x, y);
+//        for (int i = 0; i < reqs.length; i++) {
+//            System.out.format("%.3f", Matrix.dotProduct(M.getColumn(0), addOneToArray(reqs[i])));
+//        }
         
-        String f = "%10.5f";
-        Matrix x = Matrix.of(new double[][]{{5, 6, 7, 8, 9}, {7, 6, 4, 5, 6}});
-        Matrix X = Matrix.of(addOneToArray(x.transpose().getData()));
-        X.print(f);
-        System.out.println("*********************");
-        Matrix XT = X.transpose();
-        XT.print(f);
-        System.out.println("*********************");
-        Matrix Y = Matrix.of(5, 1, 10, 20, 60, 40, 50);
-        Y.print(f);
-        System.out.println("*********************");
-        Matrix XTX = XT.multiply(X);
-        XTX.print(f);
-        System.out.println("*********************");
-        Matrix XTXmin1 = XTX.inverse();
-        XTXmin1.print(f);
-        System.out.println("*********************");
-        Matrix solution = XT.multiply(X).inverse().multiply(XT).multiply(Y);
-        solution.print(f);
-        System.out.println("*********************");
-//        Matrix t = Matrix.of(new double[][] {{1, 5, 5}}).multiply(solution);
-//        t.print(f);
-        System.out.println("*********************");
-        System.out.println("*********************");
-        Matrix xx = Matrix.of(5, 2, 5, 7, 6, 6, 7, 4, 8, 5, 9, 6);
-        Matrix xxx = Matrix.of(addOneToArray(xx.getData()));
-        Matrix xxxT = xxx.transpose();
-        Matrix obsY = Matrix.of(5, 1, 10, 20, 60, 40, 50);
-        Matrix hh = xxxT.multiply(xxx).inverse().multiply(xxxT).multiply(obsY);
-        hh.print(f);
-        System.out.println("*********************");
-        System.out.println("*********************");
-        double[][] oX = {{5, 7}, {6, 6}, {7, 4}, {8, 5}, {9, 6}};
-        double[] oY = {10, 20, 60, 40, 50};
-        Matrix flup = linearRegression(oX, oY);
+        System.out.println("*************    Starting large Matrix inverse ****************************");
+        
+        long start, end;
+        
+        for (int i = 2; i < 25; i++) {
+            var m = generate(i);
+            start = System.currentTimeMillis();
+            m.determinant();
+            end = System.currentTimeMillis();
+            System.out.format("size: %d: %.2f seconds%n", i, (end - start) / 1000.);
+        }
+    }
+    
+    private static Matrix generate(int size) {
+        double[][] large = IntStream.rangeClosed(1, size)
+            .mapToObj(i -> IntStream.rangeClosed(1, size).mapToDouble(j -> j).toArray())
+            .toArray(double[][]::new)
+        ;
+        return Matrix.of(large);
     }
     
     
@@ -144,7 +122,7 @@ public class Matrix {
     public static Matrix of(int rows, int columns, double... doubles) {
         if (rows * columns != doubles.length) throw new RuntimeException
             ("rows and columns don't match number of doubles!!!");
-        var result = IntStream.range(0, rows)
+        double[][] result = IntStream.range(0, rows)
             .mapToObj(i -> IntStream.range(0, columns)
                                .mapToDouble(j -> doubles[i * columns + j])
                                .toArray())
@@ -158,7 +136,7 @@ public class Matrix {
     //********************************************************************
 
     public static Matrix identity(int size) {
-        var d = IntStream.range(0, size)
+        double[][] d = IntStream.range(0, size)
             .mapToObj(i -> rowOfIdentity(size, i))
             .toArray(double[][]::new)
         ;
@@ -233,7 +211,7 @@ public class Matrix {
     
     //-----------------------------------------------------------
     public Matrix transpose() {
-        var result = IntStream.range(0, x[0].length)
+        double[][] result = IntStream.range(0, x[0].length)
             .mapToObj(this::getColumn)
             .toArray(double[][]::new)
         ;
@@ -246,7 +224,7 @@ public class Matrix {
         if (this == o) return true;
         if (o == null) return false;
         if (!(o instanceof Matrix)) return false;
-        var m = (Matrix) o;
+        Matrix m = (Matrix) o;
         return IntStream.range(0, x.length)
             .allMatch(i -> Arrays.equals(x[i], m.getRow(i)))
         ;
@@ -314,7 +292,7 @@ public class Matrix {
     
     //-----------------------------------------------------------
     public Matrix multiply(double d) {
-        var result = Arrays.stream(x)
+        double[][] result = Arrays.stream(x)
             .map(row -> Arrays.stream(row).map(i -> d * i).toArray())
             .toArray(double[][]::new)
         ;
@@ -324,7 +302,7 @@ public class Matrix {
     //-----------------------------------------------------------
     public Matrix coFactor() {
         if (!this.isSquare()) throw new RuntimeException("Matrix is not square!!!");
-        var result = IntStream.range(0, getRowdimension())
+        double[][] result = IntStream.range(0, getRowdimension())
             .mapToObj(i -> IntStream.range(0, getColumndimension())
                 .mapToDouble(j -> this.minor(i, j) * sign(i, j))
                 .toArray()
@@ -336,7 +314,7 @@ public class Matrix {
     
     //-----------------------------------------------------------
     public Matrix inverse() {
-        var det = this.determinant();
+        double det = this.determinant();
         if (Math.abs(det) < .01) throw new RuntimeException
             ("determinant is zero or too low ( < .01) to calculate inverse!!!!!");
         return this.coFactor().transpose().multiply(1 / det);
@@ -366,10 +344,10 @@ public class Matrix {
     }
         
     //***********************************************************************
-    // private methods
+    // public methods
     //***********************************************************************
     
-    private Matrix(double[][] x) {
+    public Matrix(double[][] x) {
         if (containsNulls(x)) throw new RuntimeException("One or more nulls in the argument!!!");
         if (!isRectangular(x)) throw new RuntimeException("matrix is not rectangular!!!");
         if (!dimensionIsAtLeastOneByOne(x)) throw new RuntimeException("matrixis not a genuine matrix!!!");
@@ -380,22 +358,22 @@ public class Matrix {
     }
 
     //-----------------------------------------------------------
-    private static boolean containsNulls(double[][] x) {
+    public static boolean containsNulls(double[][] x) {
         return x == null || Arrays.stream(x).anyMatch(row -> row == null);
     }
     
     //-----------------------------------------------------------
-    private static boolean isRectangular(double[][] x) {
+    public static boolean isRectangular(double[][] x) {
         return Arrays.stream(x).mapToInt(row -> row.length).distinct().count() == 1;
     }
     
     //-----------------------------------------------------------
-    private static boolean dimensionIsAtLeastOneByOne(double[][] x) {
+    public static boolean dimensionIsAtLeastOneByOne(double[][] x) {
         return x.length >= 1 && x[0].length >= 1;
     }
     
     //-----------------------------------------------------------
-    private static double[][] convertToDouble(int[][] x) {
+    public static double[][] convertToDouble(int[][] x) {
         return Arrays.stream(x)
             .map(row -> Arrays.stream(row).mapToDouble(i -> i).toArray())
             .toArray(double[][]::new)
@@ -403,7 +381,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private static double[][] convertToDouble(long[][] x) {
+    public static double[][] convertToDouble(long[][] x) {
         return Arrays.stream(x)
             .map(row -> Arrays.stream(row).mapToDouble(i -> i).toArray())
             .toArray(double[][]::new)
@@ -411,7 +389,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private static <S extends Number, U extends Collection<S>, T extends Collection<U>>
+    public static <S extends Number, U extends Collection<S>, T extends Collection<U>>
                    double[][] convertToDouble(T collection) {
         double[][] result = collection.stream()
             .map(u -> u.stream().mapToDouble(i -> i.doubleValue()).toArray())
@@ -421,12 +399,12 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private boolean columnIndexOK(int index) {
+    public boolean columnIndexOK(int index) {
         return index >= 0 && index < this.getColumndimension();
     }
 
     //-----------------------------------------------------------
-    private static double[] skipElement(double[] x, int index) {
+    public static double[] skipElement(double[] x, int index) {
         if (index < 0 || index > x.length) throw new RuntimeException("index out of bounds");
         return IntStream.range(0, x.length)
             .filter(i -> i != index)
@@ -436,7 +414,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private static double dotProduct(double[] x, double[] y) {
+    public static double dotProduct(double[] x, double[] y) {
         if (x.length != y.length) throw new RuntimeException("Vectors must be of equal length");
         return IntStream.range(0, x.length)
             .mapToDouble(i -> x[i] * y[i])
@@ -445,34 +423,34 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private static double length(double[] x) {
+    public static double length(double[] x) {
         return Math.sqrt(dotProduct(x, x));
     }
     
     //-----------------------------------------------------------
-    private static boolean matricesAreOkeToAddOrSubtract(Matrix m, Matrix n) {
+    public static boolean matricesAreOkeToAddOrSubtract(Matrix m, Matrix n) {
         return m.getColumndimension() == n.getColumndimension() &&
                m.getRowdimension() == n.getRowdimension()
         ;
     }
     
     //-----------------------------------------------------------
-    private static boolean matricesAreOkeToMultiply(Matrix m, Matrix n) {
+    public static boolean matricesAreOkeToMultiply(Matrix m, Matrix n) {
         return m.getColumndimension() == n.getRowdimension();
     }
     
     //-----------------------------------------------------------
-    private static double[] addOneToArray(double[] x) {
+    public static double[] addOneToArray(double[] x) {
         return DoubleStream.concat(DoubleStream.of(1), Arrays.stream(x)).toArray();
     }
     
     //-----------------------------------------------------------
-    private static double[][] addOneToArray(double[][] x) {
+    public static double[][] addOneToArray(double[][] x) {
         return Arrays.stream(x).map(Matrix::addOneToArray).toArray(double[][]::new);
     }
     
     //-----------------------------------------------------------
-    private static double[] applyToDoubleArrays(double[] x, double[] y, DoubleBinaryOperator dbo) {
+    public static double[] applyToDoubleArrays(double[] x, double[] y, DoubleBinaryOperator dbo) {
         return IntStream.range(0, x.length)
             .mapToDouble(i -> dbo.applyAsDouble(x[i], y[i]))
             .toArray()
@@ -480,7 +458,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private static double[] rowOfIdentity(int size, int index) {
+    public static double[] rowOfIdentity(int size, int index) {
         return IntStream.range(0, size)
             .mapToDouble(i -> (i == index ? 1 : 0))
             .toArray()
@@ -488,7 +466,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private static Matrix addOrSubtract(Matrix m, Matrix n, DoubleBinaryOperator dbo) {
+    public static Matrix addOrSubtract(Matrix m, Matrix n, DoubleBinaryOperator dbo) {
         if (!matricesAreOkeToAddOrSubtract(m, n)) throw new RuntimeException
             ("Matrices are of wrong dimensions to add");
         double[][] result = IntStream.range(0, m.getRowdimension())
@@ -499,7 +477,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
-    private static int sign(int i, int j) {
+    public static int sign(int i, int j) {
         if (i >= j) return (i - j) % 2 == 0 ? 1 : -1;
         return (j - i) % 2 == 0 ? 1 : -1;
     }

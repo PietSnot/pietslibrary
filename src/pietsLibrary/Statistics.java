@@ -28,7 +28,7 @@ public class Statistics {
     public static void main(String... args) {
         List<Integer> x = List.of(95, 85, 80, 70, 60);
         List<Integer> y = List.of(85, 95, 70, 65, 70);
-        Pair<Double, Double> pair = linearRegression(x, y);
+        var pair = linearRegression(x, y);
         System.out.format("a = %.3f, b = %.3f%n", pair.k, pair.v);
         System.out.format("%.3f%n", pair.v * 80 + pair.k);
     }

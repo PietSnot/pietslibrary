@@ -30,14 +30,14 @@ public class SummaryStats<T extends Number> {
     }
     
     public double average() {
-        if (list.size() == 0) throw new RuntimeException("no data!");
+        if (list.isEmpty()) throw new RuntimeException("no data!");
         return list.stream().mapToDouble(i -> i.doubleValue()).average().getAsDouble();
     }
     
     public double variance() {
         if (list.size() < 2) throw new RuntimeException("too little data!!!");
         var avg = average();
-        var EX2 = list.stream().mapToDouble(i -> i.doubleValue()).map(i -> i * i).average().getAsDouble();
+        var EX2 = list.stream().mapToDouble(i -> {var t = i.doubleValue(); return t * t;}).average().getAsDouble();
         return EX2 - avg * avg;
     }
     

@@ -20,7 +20,7 @@ public class AffineTransformHelper {
       System.out.println(pixelsize(at));
    }
    
-   /**
+    /**
     * this method creates an AffineTransform that transforms coordinates
     * given in left, righ, top and bottom coordinate system to that
     * of the supplied original coordinates.
@@ -28,7 +28,7 @@ public class AffineTransformHelper {
     * Usage: say you have a panel with top left (0,0) and bottom right 
     * (width, height), and the coordinate system you want to use is
     * topleft (-5, 6) - bottom right (100, -50), then use
-    * createTransform(-5, 6, 100, -50, 0, 0, width, height)
+    * createTransform(-5, 6, 100, -50, 0, 0, width, height, true/false)
     * 
     * @param left coordinate of the leftmost point of the user coordinates
     * @param top upmost coordinate of user coordinates
@@ -48,8 +48,11 @@ public class AffineTransformHelper {
            boolean keepAspectratio
          ) {
       if (keepAspectratio) {
-          double alpha = Math.abs((originalRight - originalLeft) * (top - bottom) /
-                         (originalTop - originalBottom) - (right - left)) / 2;
+          double alpha =      (   Math.abs(originalRight - originalLeft) * Math.abs(top - bottom) -
+                                  Math.abs(originalTop - originalBottom) * (Math.abs(right - left))
+                              ) 
+                          /
+                              (Math.abs(originalTop - originalBottom) * 2);
           left -= alpha;
           right += alpha;
       }    

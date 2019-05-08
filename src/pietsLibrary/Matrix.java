@@ -3,7 +3,6 @@ package pietsLibrary;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Scanner;
 import java.util.function.DoubleBinaryOperator;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -55,13 +54,28 @@ public class Matrix {
         
         long start, end;
         
-        for (int i = 2; i < 25; i++) {
-            var m = generate(i);
+        for (int i = 2; i <= 40; i++) {
+            var m = Matrix.identity(i);
             start = System.currentTimeMillis();
-            m.determinant();
+            var det = m.determinant();
+            end = System.currentTimeMillis();
+            System.out.format("size: %d: determinant: %f  duurde: %.2f seconds%n", i, det, (end - start) / 1000.);
+            start = System.currentTimeMillis();
+            m.inverse();
             end = System.currentTimeMillis();
             System.out.format("size: %d: %.2f seconds%n", i, (end - start) / 1000.);
+            System.out.println("******************************");
         }
+        var m = Matrix.of(3, 3, 2, 0, 0, 0, 3, 0, 2, 0, 5);
+        var n = m.inverse();
+        m.print();
+        n.print();
+        System.out.println(n.determinant());
+        System.out.println("****************************");
+        m = Matrix.of(3, 3, 0, 0, 1, 0, 1, 0, 1, 0, 0);
+        m.print();
+        n = m.inverse();
+        n.print();
     }
     
     private static Matrix generate(int size) {
@@ -262,10 +276,22 @@ public class Matrix {
     public double determinant() {
         if (!isSquare()) throw new RuntimeException("Matrix must be square!!!");
         if (x.length == 1) return x[0][0];
-        return IntStream.range(0, x.length)
-            .mapToDouble(i -> x[i][0] * (i % 2 == 0 ? 1 : -1) * minor(i, 0))
-            .sum()
+        var copy = copyOfDoubleArray(x);
+        int sign = 1;
+        for (int i = 0; i < copy.length - 1; i++) {
+            if (copy[i][i] == 0) {
+                if (!switchRowsSuccesfully(copy, i)) return 0;
+                sign = -sign;
+            }
+            for (int j = i + 1; j < copy.length; j++) {
+                wipeRow(copy[i], copy[j], i);
+            }
+        }
+        return sign * IntStream.range(0, copy.length)
+            .mapToDouble(i -> copy[i][i])
+            .reduce(1, (a, b) -> a * b)
         ;
+
     }
     
     //-----------------------------------------------------------
@@ -481,4 +507,32 @@ public class Matrix {
         if (i >= j) return (i - j) % 2 == 0 ? 1 : -1;
         return (j - i) % 2 == 0 ? 1 : -1;
     }
+    
+    //------------------------------------------------------------
+    private static double[][] copyOfDoubleArray(double[][] d) {
+        return Arrays.stream(d)
+            .map(row -> Arrays.copyOf(row, row.length))
+            .toArray(double[][]::new);
+    }
+    
+    //------------------------------------------------------------
+    private static void wipeRow(double[] source, double[] target, int index) {
+        double factor = target[index] / source[index];
+        for (int i = 0; i < source.length; i++) target[i] -= factor * source[i];
+    }
+    
+    //------------------------------------------------------------
+    private static boolean switchRowsSuccesfully(double[][] d, int index) {
+        if (d[index][index] != 0) return true;
+        for (int i = index + 1; i < d.length; i++) {
+            if (d[i][index] != 0) {
+                var row = d[index];
+                d[index] = d[i];
+                d[i] = row;
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -273,5 +273,14 @@ public class MatrixTestCases {
         Matrix n = Matrix.of(1, 3, 1, 2, 3);
         assertTrue(m.dotProduct(n) == 14);
     }
+    
+    //****************************************************************
+    // testing Determinant
+    //****************************************************************
+    @Test
+    public void testDeterminantOfIdentityIsOne() {
+        Matrix m = Matrix.identity(12);
+        assertTrue(m.determinant() == 1d);
+    }
 
 }

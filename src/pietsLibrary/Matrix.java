@@ -19,42 +19,12 @@ public class Matrix {
         /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class   
            should be named Solution. 
         */
-
-//        Scanner scan = new Scanner(System.in);
-//
-//        int[] nrs = Arrays.stream(scan.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-//        int obs = nrs[1];
-//        int vars = nrs[0];
-//
-//        double[][] x = new double[obs][vars];
-//        double[] y = new double[obs];
-//        for (int line = 0; line < obs; line++) {
-//            double[] data = Arrays.stream(scan.nextLine().split(" ")).mapToDouble(Double::parseDouble).toArray();
-//            for (int k = 0; k < vars; k++) {
-//                x[line][k] = data[k];
-//            }
-//            y[line] = data[vars];
-//        }
-//
-//        int requested = Integer.parseInt(scan.nextLine());
-//        double[][] reqs = new double[requested][2];
-//        for (int line = 0; line < requested; line++) {
-//            reqs[line] = Arrays.stream(scan.nextLine().split(" "))
-//                .mapToDouble(Double::parseDouble)
-//                .toArray()
-//            ;
-//        }
-//
-//        Matrix M = linearRegression(x, y);
-//        for (int i = 0; i < reqs.length; i++) {
-//            System.out.format("%.3f", Matrix.dotProduct(M.getColumn(0), addOneToArray(reqs[i])));
-//        }
         
         System.out.println("*************    Starting large Matrix inverse ****************************");
         
         long start, end;
         
-        for (int i = 2; i <= 40; i++) {
+        for (int i = 2; i <= 50; i++) {
             var m = Matrix.identity(i);
             start = System.currentTimeMillis();
             var det = m.determinant();
@@ -69,11 +39,16 @@ public class Matrix {
         var m = Matrix.of(3, 3, 2, 0, 0, 0, 3, 0, 2, 0, 5);
         var n = m.inverse();
         m.print();
+        System.out.println("***************");
         n.print();
+        System.out.println("***************");
         System.out.println(n.determinant());
+        System.out.println("***************");
+        m.multiply(n).print();
         System.out.println("****************************");
         m = Matrix.of(3, 3, 0, 0, 1, 0, 1, 0, 1, 0, 0);
         m.print();
+        System.out.println("***************");
         n = m.inverse();
         n.print();
     }

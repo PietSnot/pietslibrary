@@ -282,5 +282,14 @@ public class MatrixTestCases {
         Matrix m = Matrix.identity(12);
         assertTrue(m.determinant() == 1d);
     }
+    
+    @Test
+    public void determinantChangsSignWhenTwoRowsAreExchanged() {
+        Matrix m = Matrix.identity(3);
+        Matrix n = Matrix.of(3, 3, 0, 1, 0, 1, 0, 0, 0, 0, 1);
+        Matrix o = Matrix.of(3, 3, 0, 1, 0, 0, 0, 1, 1, 0, 0);
+        assertEquals(m.determinant(), -n.determinant(), 0d);
+        assertEquals(n.determinant(), -o.determinant(), 0d);
+    }
 
 }

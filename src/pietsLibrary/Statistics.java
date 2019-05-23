@@ -7,13 +7,10 @@
 package pietsLibrary;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import java.util.stream.IntStream;
@@ -26,11 +23,17 @@ import java.util.stream.LongStream;
 public class Statistics {
     
     public static void main(String... args) {
-        List<Integer> x = List.of(95, 85, 80, 70, 60);
-        List<Integer> y = List.of(85, 95, 70, 65, 70);
-        var pair = linearRegression(x, y);
-        System.out.format("a = %.3f, b = %.3f%n", pair.k, pair.v);
-        System.out.format("%.3f%n", pair.v * 80 + pair.k);
+//        List<Integer> x = List.of(95, 85, 80, 70, 60);
+//        List<Integer> y = List.of(85, 95, 70, 65, 70);
+//        var pair = linearRegression(x, y);
+//        System.out.format("a = %.3f, b = %.3f%n", pair.k, pair.v);
+//        System.out.format("%.3f%n", pair.v * 80 + pair.k);
+        int n = 100;
+        double alpha = 10. / n;
+        System.out.format("%,d%n",LongStream.range(1, (int) Math.ceil(1. / alpha))
+            .mapToObj(i -> nOverK(n, i))
+            .reduce(BigInteger.ZERO, (a, b) -> a.add(b))
+        );
     }
     
     public static double average(double[] x) {

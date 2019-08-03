@@ -73,7 +73,6 @@ public class AffineTransformHelper {
     * AffineTrnansform atfont = AffineTransform.createFontTransform(at);
     * fontToUse = f.deriveFont(atfont);
     * and use fontToUse in your drawing routines
-    * @param atAffineTransform
     * @return see above
     */
    public static AffineTransform createFontTransform(AffineTransform at) {

@@ -5,11 +5,10 @@
  */
 package pietsLibrary;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -21,59 +20,61 @@ import java.util.stream.Stream;
 public class Actuarial {
     
     public static void main(String... args) {
-        List<Double> cf = Arrays.asList(1000., 1000., 1000., -1000., 1000., 1000.);
-        System.out.println("cashflows: " + cf);
-        
-        //----------------------------------------------------------------
-        double interest = 0.0;
-        double reserve = presentValue(interest, cf, false);
-        System.out.format("pv tegen %.8f peruun = %,.2f%n", interest, reserve);
-        double i = findInterest(cf, reserve, 0.0000001, false);
-        System.out.format("berekende interest: %.8f peruun%n", i);
-        
-        /*
-        output:
-            cashflows: [1000.0, 1000.0, 1000.0, -1000.0, 1000.0, 1000.0]
-            pv tegen 0,00000000 peruun = 4.000,00
-            berekende interest: 0,00000000 peruun
-        */
-        
-        interest = 0.1234567;
-        reserve = presentValue(interest, cf, false);
-        System.out.format("pv tegen %.8f peruun = %,.2f%n", interest, reserve);
-        i = findInterest(cf, reserve, 0.0000001, false);
-        System.out.format("berekende interest: %.8f peruun%n", i);
-        
-        /*
-        output:
-            pv tegen 0,12345670 peruun = 2.816,00
-            berekende interest: 0,12345665 peruun
-        */
-        
-        interest = 0.2;
-        reserve = presentValue(interest, cf, false);
-        System.out.format("pv tegen %.8f peruun = %,.2f%n", interest, reserve);
-        i = findInterest(cf, reserve, 0.0000001, false);
-        System.out.format("berekende interest: %.8f peruun%n", i);
-        
-        /*
-        output:
-            pv tegen 0,20000000 peruun = 2.361,00
-            berekende interest: 0,19999990 peruun
-        */
-        
-        interest = 0.25;
-        reserve = presentValue(interest, cf, false);
-        System.out.format("pv tegen %.8f peruun = %,.2f%n", interest, reserve);
-        i = findInterest(cf, reserve, 0.0000001, false);
-        System.out.format("berekende interest: %.8f peruun%n", i);
-        
-        /*
-        output:
-            pv tegen 0,25000000 peruun = 2.132,22
-            Exception in thread "main" java.lang.IllegalArgumentException: Cannot find the required interest
-	        at pietsLibrary.Actuarial.lambda$findInterest$4(Actuarial.java:92)
-        */
+//        List<Double> cf = Arrays.asList(1000., 1000., 1000., -1000., 1000., 1000.);
+//        System.out.println("cashflows: " + cf);
+//        
+//        //----------------------------------------------------------------
+//        double interest = 0.0;
+//        double reserve = presentValue(interest, cf, false);
+//        System.out.format("pv tegen %.8f peruun = %,.2f%n", interest, reserve);
+//        double i = findInterest(cf, reserve, 0.0000001, false);
+//        System.out.format("berekende interest: %.8f peruun%n", i);
+//        
+//        /*
+//        output:
+//            cashflows: [1000.0, 1000.0, 1000.0, -1000.0, 1000.0, 1000.0]
+//            pv tegen 0,00000000 peruun = 4.000,00
+//            berekende interest: 0,00000000 peruun
+//        */
+//        
+//        interest = 0.1234567;
+//        reserve = presentValue(interest, cf, false);
+//        System.out.format("pv tegen %.8f peruun = %,.2f%n", interest, reserve);
+//        i = findInterest(cf, reserve, 0.0000001, false);
+//        System.out.format("berekende interest: %.8f peruun%n", i);
+//        
+//        /*
+//        output:
+//            pv tegen 0,12345670 peruun = 2.816,00
+//            berekende interest: 0,12345665 peruun
+//        */
+//        
+//        interest = 0.2;
+//        reserve = presentValue(interest, cf, false);
+//        System.out.format("pv tegen %.8f peruun = %,.2f%n", interest, reserve);
+//        i = findInterest(cf, reserve, 0.0000001, false);
+//        System.out.format("berekende interest: %.8f peruun%n", i);
+//        
+//        /*
+//        output:
+//            pv tegen 0,20000000 peruun = 2.361,00
+//            berekende interest: 0,19999990 peruun
+//        */
+//        
+//        interest = 0.25;
+//        reserve = presentValue(interest, cf, false);
+//        System.out.format("pv tegen %.8f peruun = %,.2f%n", interest, reserve);
+//        i = findInterest(cf, reserve, 0.0000001, false);
+//        System.out.format("berekende interest: %.8f peruun%n", i);
+//        
+//        /*
+//        output:
+//            pv tegen 0,25000000 peruun = 2.132,22
+//            Exception in thread "main" java.lang.IllegalArgumentException: Cannot find the required interest
+//	        at pietsLibrary.Actuarial.lambda$findInterest$4(Actuarial.java:92)
+//        */
+        System.out.format("%8.4f%n", a(30, .04, false));
+        System.out.format("%8.4f%n", a3(30, .04, true));
     }  // einde main
     
     //----------------------------------------------------------------------
@@ -82,7 +83,7 @@ public class Actuarial {
         return Stream
             .iterate(prenumerando ? 1.0 : v, a -> a * v)
             .limit(max_duration)
-            .collect(Collectors.toList())
+            .collect(toList())
         ;
     }
     
@@ -128,6 +129,43 @@ public class Actuarial {
             .range(0, Math.min(listK.size(), listV.size()))
             .mapToObj(e -> new Tweetal<>(listK.get(e), listV.get(e)))
             .collect(Collectors.toList())
+        ;
+    }
+    
+    //----------------------------------------------------------------------
+    public static double A(int n, double r) {
+        return Math.pow(1 / (1 + r), n);
+    }
+    
+    //----------------------------------------------------------------------
+    public static double a(int n, double r, boolean prenumerando) {
+        return r == 0.0 ? n : 
+           prenumerando ? (1  + r) * (1 - A(n, r)) / r :
+                          (1 - A(n, r)) / r;
+    }
+    
+    //----------------------------------------------------------------------
+    public static double a(int n, double r, boolean prenumerando, int periodsPerYear) {
+        return a(n * periodsPerYear, r / periodsPerYear, prenumerando);
+    }
+    
+    //----------------------------------------------------------------------
+    public static double a2(int n, double r, boolean prenumerando) {
+        double v = 1 / (1 + r);
+        return DoubleStream.iterate(0, d -> (prenumerando ? 1 : v) + v * d)
+            .skip(n)
+            .findFirst()
+            .getAsDouble();
+    }
+    
+    //----------------------------------------------------------------------
+    public static double a3(int n, double r, boolean prenumerando) {
+        if (n == 0) return 0;
+        double v = 1 / (1 + r);
+        double constant = prenumerando ? 1 : v;
+        return IntStream.range(0, n)
+            .mapToDouble(i -> i)
+            .reduce(0, (d, i) -> v * d + constant)
         ;
     }
 }

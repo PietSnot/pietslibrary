@@ -154,8 +154,8 @@ public class Statistics {
        return result;
    }
    
-   public static <S1 extends Number, S2 extends Number, T extends Collection<S1>, U extends Collection<S2>> 
-                 Pair<Double, Double> linearRegression(T x, U y) {
+public static <S1 extends Number, S2 extends Number, T extends Collection<S1>, U extends Collection<S2>> 
+             Pair<Double, Double> linearRegression(T x, U y) {
        double meanX = average(x);
        double meanY = average(y);
        double somX = meanX * x.size();

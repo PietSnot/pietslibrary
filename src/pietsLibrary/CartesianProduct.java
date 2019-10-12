@@ -20,21 +20,21 @@ import java.util.stream.Stream;
  */
 public class CartesianProduct {
     
-public static void main(String... args) {
-    List<String> a = Arrays.asList("black", "blue");
-    List<String> b = Arrays.asList("apple", "orange", "grapes");
-    List<String> c = Arrays.asList("dog", "lion", "snake");
-    List<Integer> d = Arrays.asList(1, 2, 3);
-    System.out.println(cartesianProductString(a, b, c, d));
-}
+    public static void main(String... args) {
+        List<String> a = Arrays.asList("black", "blue");
+        List<String> b = Arrays.asList("apple", "orange", "grapes");
+        List<String> c = Arrays.asList("dog", "lion", "snake");
+        List<Integer> d = Arrays.asList(1, 2, 3);
+        System.out.println(cartesianProductString(a, b, c, d));
+    }
 
-private static <T, R> Stream<String> oneToN(T t, List<R> list) {
-    return list.stream().map(r -> t.toString() + "-" + r);
-}
+    private static <T, R> Stream<String> oneToN(T t, List<R> list) {
+        return list.stream().map(r -> t.toString() + "-" + r);
+    }
 
-private static <T, R> List<String> nToN(List<T> listT, List<R> listR) {
-    return listT.stream().flatMap(t -> oneToN(t, listR)).collect(toList());
-}
+    private static <T, R> List<String> nToN(List<T> listT, List<R> listR) {
+        return listT.stream().flatMap(t -> oneToN(t, listR)).collect(toList());
+    }
 
     public static List<String> cartesianProductString(List... lists) {
         return Arrays.stream(lists).reduce(Arrays.asList(""), CartesianProduct::nToN);

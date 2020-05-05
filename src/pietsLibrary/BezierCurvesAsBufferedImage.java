@@ -29,7 +29,7 @@ public class BezierCurvesAsBufferedImage {
             double tryfactor
     ) {
         BufferedImage bufim = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        AffineTransform at = AffineTransformHelper.createTransform(-1, 1, 1, -1, 0, 0, width - 1, height - 1, true);
+        AffineTransform at = AffineTransformHelper.create(0, 0, width - 1, height - 1, -1, 1, 1, -1, true);
         Path2D.Double p2dd = new Path2D.Double(Path2D.WIND_EVEN_ODD);
 //      Path2D.Double p2dd = new Path2D.Double(Path2D.WIND_NON_ZERO);
         p2dd.moveTo(outerRadius, 0);
@@ -63,8 +63,8 @@ public class BezierCurvesAsBufferedImage {
         int width, int height, double scale, double curvingFactor, Color startcol, Color endcol) {
         BufferedImage bufim = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         int left = -1, top = 1, right = 1, bottom = -1;
-        AffineTransform at = AffineTransformHelper.createTransform(
-                left, top, right, bottom, 0, 0, width - 1, height - 1, true
+        AffineTransform at = AffineTransformHelper.create(
+                0, 0, width - 1, height - 1, left, top, right, bottom, true
         );
         Path2D p2d = new Path2D.Double();
         p2d.setWindingRule(Path2D.WIND_EVEN_ODD);

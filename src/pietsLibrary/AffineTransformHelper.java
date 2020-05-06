@@ -83,10 +83,6 @@ public class AffineTransformHelper {
                 FT += correction;
                 FB -= correction;
             }
-            System.out.println("par = " + Par);
-            System.out.println("uar = " + abs((FT - FB) / (FR - FL)));
-            System.out.println("p: " + ToTopLeft + "  " + ToBottomRight);
-            System.out.format("u: (%.2f, %.2f) , (%.2f, %.2f)%n", FL, FT, FR, FB);
         }
         double alpha = (TL - TR) / (FL - FR);
         double beta = 0, gamma = 0;
@@ -96,6 +92,21 @@ public class AffineTransformHelper {
         return new AffineTransform(alpha, gamma, beta, delta, e, f);
     }
     
+    /**
+     * like the create constructor abouve, only the parameters are not points
+     * but the individual coordinates of these points
+     * @param toLeft          the left x coordinate of the TO area
+     * @param toTop           the upper y coordinate of the TO area
+     * @param toRight         the right x coordinate of the TO area
+     * @param toBottom        the bottom y coordinate of the TO area
+     * @param fromLeft        the left x coordinate of the FROM area
+     * @param fromTop         the upper y coordinate of the FROM area
+     * @param fromRight       the right x coordinate of the FROM area
+     * @param fromBottom      the bottom y coordinate of the FROM area
+     * @param keepAspectratio if true, takes care that TO and FROM have 
+     *                        the same aspectratio
+     * @return 
+     */
     public static AffineTransform create( 
         double toLeft, double toTop, double toRight, double toBottom,
         double fromLeft, double fromTop, double fromRight, double fromBottom,

@@ -96,6 +96,11 @@ public class Relations<T> {
     }
     
     //--------------------------------------
+    public boolean isConnected() {
+        return getNrOfRelatedGroups() == 1;
+    }
+    
+    //--------------------------------------
     @Override
     public String toString() {
         Map<Object, List<T>> temp = map.entrySet().stream().collect(

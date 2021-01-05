@@ -481,8 +481,9 @@ public class Matrix {
      * 
      * M = linearRegression(X, Y)
      * 
-     * if we then want to know the prediction of (2, 5) we get:
-     * y = M(2, 5)
+     * if we then want to know the prediction of (2, 5) we first put a 1 to 
+     * the left of (2, 5) ( => (1, 2, 5)) and then we calculate
+     * y = M(1, 2, 5)
      * 
      */
     public static Matrix linearRegression(double[][] X, double[] Y) {
@@ -610,6 +611,7 @@ public class Matrix {
     }
     
     //-----------------------------------------------------------
+    
     private static double[] addOneToArray(double[] x) {
         return DoubleStream.concat(DoubleStream.of(1), Arrays.stream(x)).toArray();
     }

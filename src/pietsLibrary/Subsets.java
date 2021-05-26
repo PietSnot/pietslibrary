@@ -9,6 +9,7 @@ package pietsLibrary;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import static java.util.Collections.max;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
+import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 
 /**
@@ -42,8 +44,8 @@ public class Subsets {
     }
     
     private static Stream<List<Integer>> getNewSubsets(List<Integer> list, int size) {
-        return IntStream.range(list.isEmpty() ? 0 : Collections.max(list) + 1, size)
-            .mapToObj(i -> {List<Integer> temp = new ArrayList<>(list); temp.add(i); return temp;})
+        return range(list.isEmpty() ? 0 : max(list) + 1, size)
+            .mapToObj(i -> {var temp = new ArrayList<>(list); temp.add(i); return temp;})
         ;
     }
     

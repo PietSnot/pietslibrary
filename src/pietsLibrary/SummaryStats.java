@@ -34,8 +34,9 @@ public class SummaryStats<T> {
         System.out.println(stats.average());
     }
     
-    public SummaryStats() {}
-    
+    public SummaryStats(Function<T, Double> f) {
+        transform = f;
+    }
     public SummaryStats(List<T> input, Function<T, Double> f) {
         list.addAll(input);
         transform = f;

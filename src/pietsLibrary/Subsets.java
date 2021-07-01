@@ -8,7 +8,6 @@ package pietsLibrary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import static java.util.Collections.max;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.Map;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import java.util.stream.IntStream;
 import static java.util.stream.IntStream.range;
 import java.util.stream.Stream;
 
